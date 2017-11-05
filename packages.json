@@ -1,0 +1,13 @@
+{
+	"schema_version": "3.0.0",
+	"packages": [
+		{
+			"name": "Titan Edge Highlighter",
+			"description": "Titan Edge syntax highlighter support for Sublime Text.",
+			"author": "Ali Erdem Akın",
+			"homepage": "https://github.com/ErdemAkin/Titan-Edge-Highlighter",
+			"details": "https://github.com/ErdemAkin/Titan-Edge-Highlighter",
+			"labels": ["php", "titan", "edge", "language syntax"]
+		}
+	]
+}

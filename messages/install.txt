@@ -1,0 +1,5 @@
+Titan Edge Highlighter
+
+This package adds syntax definitions for the Titan 2 Edge engine.
+
+Works with Sublime Text 3.

@@ -1,0 +1,129 @@
+%YAML 1.2
+---
+name: Titan Edge
+file_extensions: [edge, edge.php]
+scope: text.edge
+contexts:
+  main:
+    - match: ''
+      push:
+        - include: 'scope:text.html.basic'
+        - meta_scope: text.html.edge
+          pop: true
+      with_prototype:
+
+        - match: '{{--'
+          captures:
+            0: punctuation.definition.comment.begin.edge
+          push:
+            - meta_scope: comment.block.html.edge
+            - match: '--}}'
+              scope: punctuation.definition.comment.end.edge
+              pop: true
+            - match: "--"
+              scope: invalid.illegal.bad-comments-or-CDATA.html.edge
+
+        - match: '\{(!!)|(\{\{\{?)-?'
+          captures:
+            0: punctuation.section.embedded.begin.edge
+          push:
+            - meta_scope: entity.name.tag.edge
+            - meta_content_scope: source.php.edge
+            - match: '-?(\}?\}\})|(!!)\}'
+              captures:
+                0: punctuation.section.embedded.end.edge
+                1: punctuation.section.embedded.end.edge
+              pop: true
+            - include: 'scope:source.php'
+
+        - match: '@\{\{\{?-?'
+          captures:
+            0: punctuation.section.embedded.ignore.begin.edge
+          push:
+            - meta_scope: 'scope:text.html.basic'
+            - meta_content_scope: 'scope:text.html.basic'
+            - match: '-?\}?\}\}'
+              captures:
+                0: punctuation.section.embedded.ignore.end.edge
+                1: punctuation.section.embedded.ignore.end.edge
+              pop: true
+
+        - match: '((\s{0}|^)(@)(php)(?![^?]*\(*\))|<\?(?i:php|=)?)(?![^?]*\?>)'
+          scope: punctuation.section.embedded.begin.php
+          captures:
+              0: punctuation.section.embedded.begin.php
+              3: constant.other.inline-data.html
+              4: entity.name.tag.block.any.html
+          push:
+            - meta_content_scope: source.php
+            - meta_scope: meta.embedded.block.edge.php
+            - include: 'scope:source.php'
+          with_prototype:
+          - match: (?=\?>|(\s{0}|^)(@)(endphp))(\?>|(\s{0}|^)(@)(endphp))
+            captures:
+              0: punctuation.section.embedded.end.php
+              6: constant.other.inline-data.html
+              7: entity.name.tag.block.any.html
+            pop: true
+
+        - match: '<\?(?i:php|=)?'
+          scope: punctuation.section.embedded.begin.php
+          push:
+            - meta_content_scope: source.php.edge
+            - meta_scope: meta.embedded.line.edge.php
+            - include: 'scope:source.php'
+          with_prototype:
+          - match: (?=\?>)(\?>)
+            captures:
+              0: punctuation.section.embedded.end.php
+            pop: true
+
+        - match: '(\s{0}|^)(\@)\b(acfrepeater|auth|block|break|can|cannot|choice|case|component|continue|debug|each|elsecan|elsecannot|elseif|embed|extends|for|foreach|forelse|guest|hasSection|hipchat|if|isset|include|includeIf|includeWhen|inject|lang|layout|macro|macrodef|minify|partial|php|push|render|section|servers|set|slack|slot|stack|story|switch|task|unless|unset|while|wpposts|yield)\b(?=(|\s*|)\(\()'
+          captures:
+            0: punctuation.section.embedded.php
+            2: constant.other.inline-data.html
+            3: entity.name.tag.block.any.html
+          push:
+            - meta_scope: custom.compiler.edge.php
+            - meta_content_scope: source.php.edge
+            - match: '(?<=\)\))'
+              pop: true
+            - include: 'scope:source.php'
+
+        - match: '(\s{0}|^)(\@)\b(acfrepeater|auth|block|break|can|cannot|choice|case|component|continue|debug|each|elsecan|elsecannot|elseif|embed|extends|for|foreach|forelse|guest|hasSection|hipchat|if|isset|include|includeIf|includeWhen|inject|lang|layout|macro|macrodef|minify|partial|php|push|render|section|servers|set|slack|slot|stack|story|switch|task|unless|unset|while|wpposts|yield)\b(?=(|\s*|)\()'
+          captures:
+            0: punctuation.section.embedded.php
+            2: constant.other.inline-data.html
+            3: entity.name.tag.block.any.html
+          push:
+            - meta_scope: custom.compiler.edge.php
+            - meta_content_scope: source.php.edge
+            - match: '(?<=\))'
+              pop: true
+            - include: 'scope:source.php'
+
+        - match: '(\s{0}|^)(\@)\b(acfend|after|append|auth|break|breakpoint|continue|default|else|empty|endswitch|endafter|endauth|endblock|endcan|endcannot|endcomponent|endembed|endempty|endfor|endforeach|endforelse|endguest|endif|endisset|endmacro|endmarkdown|endminify|endpartial|endpush|endsection|endsetup|endslot|endstory|endtask|endunless|endwhile|guest|markdown|overwrite|parent|setup|show|stop|verbatim|endverbatim|wpempty|wpend|wpquery)\b'
+          scope: custom.compiler.edge.php
+          captures:
+            0: punctuation.section.embedded.php
+            2: constant.other.inline-data.html
+            3: entity.name.tag.block.any.html
+          pop: false
+
+        - match: '(\s{0}|^)(\@)\b([a-zA-Z_]+)\b(?=(|\s*|)\()'
+          captures:
+            0: support.function
+            2: constant.other.inline-data.html
+          push:
+            - meta_scope: custom.compiler.edge.php
+            - meta_content_scope: source.php.edge
+            - match: '(?<=\))'
+              pop: true
+            - include: 'scope:source.php'
+
+        - match: '(\s{0}|^)(\@)\b([a-zA-Z_]+)\b(\s?)\b'
+          scope: custom.compiler.edge.php
+          captures:
+            0: support.function
+            2: constant.other.inline-data.html
+          pop: false
