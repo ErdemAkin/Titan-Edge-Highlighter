@@ -1,7 +1,7 @@
 ## Titan Edge Highlighter
 
 ### Titan
-
+Titan Edge Template : http://v2.titanphp.com/doc/view
 
 ### How to install
 1. Open Sublime Text 3
