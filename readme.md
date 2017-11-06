@@ -1,5 +1,8 @@
 ## Titan Edge Highlighter
 
+### Titan
+
+
 ### How to install
 1. Open Sublime Text 3
 2. Ctrl + Shift + P
